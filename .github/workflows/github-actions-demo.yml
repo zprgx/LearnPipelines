@@ -35,7 +35,7 @@ jobs:
 
       - name: Run Semgrep Scan
         run: |
-          semgrep --config=p/security-audit --exclude=tests/ > semgrep-results.txt
+          semgrep --config=auto > semgrep-results.txt
           if grep -qE "(HIGH|CRITICAL)" semgrep-results.txt; then
             grep -E "(HIGH|CRITICAL)" semgrep-results.txt >&2
             exit 1
@@ -44,7 +44,7 @@ jobs:
 
       - name: Run Gitleaks Scan
         run: |
-          gitleaks --verbose --redact --pretty > gitleaks-results.txt
+          gitleaks detect --verbose --redact > gitleaks-results.txt
           if grep -qE "(HIGH|CRITICAL)" gitleaks-results.txt; then
             grep -E "(HIGH|CRITICAL)" gitleaks-results.txt >&2
             exit 1
