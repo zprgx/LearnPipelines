@@ -48,10 +48,9 @@ jobs:
       - name: Run Gitleaks Scan
         # Gitleaks will fail with "1" when secrets detected
         run: gitleaks detect --verbose --redact -f gitleaks-results.txt
-        # Whether to continue if secrets got detected
         continue-on-error: false
-    
-    - name: Fail if any step failed
+
+      - name: Fail if any step failed
         run: |
           if [ ${{ job.status }} == 'failure' ]; then
             echo "One or more steps failed"
