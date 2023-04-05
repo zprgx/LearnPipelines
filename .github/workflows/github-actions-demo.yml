@@ -22,9 +22,12 @@ jobs:
         id: branch
         run: echo ::set-output name=branch::${GITHUB_REF#refs/heads/}
 
+      - name: Install dependencies
+        run : |
+            sudo apt install python3-pip jq
+      
       - name: Install Semgrep
         run: | 
-            sudo apt install python3-pip
             pip install semgrep
 
       - name: Install Gitleaks
@@ -35,18 +38,14 @@ jobs:
 
       - name: Run Semgrep Scan
         run: |
-          semgrep --config=auto --json --output semgrep-results.txt
-          if grep -qE "(HIGH|CRITICAL)" semgrep-results.txt; then
-            grep -E "(HIGH|CRITICAL)" semgrep-results.txt >&2
+          semgrep --config=auto --json --output semgrep-results.json
+          if grep -qE "(HIGH|CRITICAL)" semgrep-results.json; then
+            grep -E "(HIGH|CRITICAL)" semgrep-results.json >&2
             exit 1
           fi
         continue-on-error: true
 
       - name: Run Gitleaks Scan
-        run: |
-          gitleaks detect --verbose --redact -f gitleaks-results.txt
-          if grep -qE "(HIGH|CRITICAL)" gitleaks-results.txt; then
-            grep -E "(HIGH|CRITICAL)" gitleaks-results.txt >&2
-            exit 1
-          fi
+        # Gitleaks will fail with "1" when secrets detected
+        run: gitleaks detect --verbose --redact -f gitleaks-results.txt
         continue-on-error: true
