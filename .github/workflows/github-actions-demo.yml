@@ -43,12 +43,12 @@ jobs:
             cat semgrep-results.json | jq  -c '[.results[] | {message: .extra.message , line: .extra.lines , impact: .extra.metadata.impact}]' | jq  >&2
             exit 1
           fi
-        continue-on-error: false
+        continue-on-error: true
 
       - name: Run Gitleaks Scan
         # Gitleaks will fail with "1" when secrets detected
         run: gitleaks detect --verbose --redact -f gitleaks-results.txt
-        continue-on-error: false
+        continue-on-error: true
 
       - name: Fail if any step failed
         run: |
