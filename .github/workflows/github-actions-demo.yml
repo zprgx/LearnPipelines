@@ -55,4 +55,4 @@ jobs:
       
       - name: Check for errors
         run: |
-          if [[ -z "$gitleaks" ]] || [[ -z "$semgrep" ]]; then exit 1;fi 
+          if [[ -z "$gitleaks" ]] || [[ -z "$semgrep" ]]; then echo '[!] Errors during one or more of security scanning tests '; exit 1; fi 
