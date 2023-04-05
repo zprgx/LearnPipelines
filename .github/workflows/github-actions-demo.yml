@@ -42,17 +42,17 @@ jobs:
           if grep -qE "(MEDIUM|HIGH|CRITICAL)" semgrep-results.json; then
             cat semgrep-results.json | jq  -c '[.results[] | {message: .extra.message , line: .extra.lines , impact: .extra.metadata.impact}]' | jq  >&2
             exit 1
+            echo "semgrep=0" >> $GITHUB_ENV
           fi
         continue-on-error: true
 
       - name: Run Gitleaks Scan
         # Gitleaks will fail with "1" when secrets detected
         run: gitleaks detect --verbose --redact -f gitleaks-results.txt
+          if [[ "$?" == "1" ]]; then exit 1 ; fi
+          echo "gitleaks=0" >> $GITHUB_ENV
         continue-on-error: true
-
-      - name: Fail if any step failed
+      
+      - name: Check for errors
         run: |
-          if [ ${{ job.status }} == 'failure' ]; then
-            echo "One or more steps failed"
-            exit 1
-          fi
+          if [[ -z "$gitleaks" ]] || [[ -z "$semgrep" ]]; then exit 1;fi 
