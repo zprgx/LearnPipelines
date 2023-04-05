@@ -5,3 +5,4 @@ lol
 lol
 lol
 lopl
+aws_secret=AKIAIMNOJVGFDXXJE4Ok
