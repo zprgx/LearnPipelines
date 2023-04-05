@@ -43,7 +43,7 @@ jobs:
             cat semgrep-results.json | jq >&2
             exit 1
           fi
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Run Gitleaks Scan
         # Gitleaks will fail with "1" when secrets detected
