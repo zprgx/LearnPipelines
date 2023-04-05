@@ -49,8 +49,7 @@ jobs:
       - name: Run Gitleaks Scan
         # Gitleaks will fail with "1" when secrets detected
         run: gitleaks detect --verbose --redact -f gitleaks-results.txt
-          if [[ "$?" == "1" ]]; then exit 1 ; fi
-          echo "gitleaks=0" >> $GITHUB_ENV
+          if [[ "$?" == "1" ]]; then exit 1 ; else echo "gitleaks=0" >> $GITHUB_ENV ;fi
         continue-on-error: true
       
       - name: Check for errors
