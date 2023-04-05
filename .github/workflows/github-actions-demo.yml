@@ -40,7 +40,7 @@ jobs:
         run: |
           semgrep --config=auto --json --output semgrep-results.json
           if grep -qE "(HIGH|CRITICAL)" semgrep-results.json; then
-            grep -E "(HIGH|CRITICAL)" semgrep-results.json >&2
+            cat semgrep-results.json | jq >&2
             exit 1
           fi
         continue-on-error: true
@@ -48,4 +48,5 @@ jobs:
       - name: Run Gitleaks Scan
         # Gitleaks will fail with "1" when secrets detected
         run: gitleaks detect --verbose --redact -f gitleaks-results.txt
-        continue-on-error: true
+        # Whether to continue if secrets got detected
+        continue-on-error: false
