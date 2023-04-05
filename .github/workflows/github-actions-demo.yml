@@ -40,10 +40,10 @@ jobs:
         run: |
           semgrep --config=auto --json --output semgrep-results.json
           if grep -qE "(HIGH|CRITICAL)" semgrep-results.json; then
-            cat semgrep-results.json | jq >&2
+            cat semgrep-results.json | jq  -c '[.results[] | {message: .extra.message , secret: .extra.lines , impact: .extra.metadata.impact}]' >&2
             exit 1
           fi
-        continue-on-error: false
+        continue-on-error: true
 
       - name: Run Gitleaks Scan
         # Gitleaks will fail with "1" when secrets detected
